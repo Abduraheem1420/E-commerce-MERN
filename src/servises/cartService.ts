@@ -1,4 +1,5 @@
 import { cartModel } from "../models/cartModel"
+import productModel from "../models/productModel";
 
 interface getCartForUser{
     userId : string
@@ -16,6 +17,33 @@ interface getCartForActiveUser{
 
 export const getCartForActiveUser = async ({userId} : getCartForActiveUser) =>{
 let cart = await cartModel.findOne({userId , status : 'active'});
-if(!cart) await createCartForUser({userId})
-    return cart
+if(!cart) cart = await createCartForUser({userId})
+
+    return cart;
+}
+
+interface addItemToCart{
+    userId : string
+    productId : any
+    quantity : number
+}
+
+
+export const addItemToCart = async({userId , productId , quantity} : addItemToCart) =>{
+    const cart = await getCartForActiveUser({userId});
+
+    const existsInCart = cart.items.find((p) => p.product.toString() === productId);
+    if(existsInCart) return {data: 'المنتج موجود عندك' , statusCode: 400};
+
+    const product = await productModel.findById(productId);
+    if(!product) return {data : 'المنتج غير موجود ', statusCode: 404};
+
+    if(product.stock < quantity) return { data : " المخزون أقل من طلبك" , statusCode : 400};
+
+    cart.items.push({product : productId , unitPrice: product.price , quantity : quantity})
+
+    cart.totalAmount += product.price * quantity;
+    const updatedCart = await cart.save();
+
+    return {data : updatedCart , statusCode : 200};
 }
