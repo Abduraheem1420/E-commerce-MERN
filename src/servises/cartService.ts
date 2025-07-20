@@ -47,3 +47,34 @@ export const addItemToCart = async({userId , productId , quantity} : addItemToCa
 
     return {data : updatedCart , statusCode : 200};
 }
+
+interface updateItemInCart{
+    userId : string
+    productId : any
+    quantity : number
+}
+
+export const updateItemInCart = async ({userId , productId , quantity} : updateItemInCart) =>{
+  const cart = await getCartForActiveUser({userId});
+  const existsInCart = cart.items.find((p) => p.product.toString() === productId);
+  if(!existsInCart) return { data : "المنتج غير موجود عندك " , statusCode :400};
+
+  const product = await productModel.findById(productId);
+  if(!product) return {data : 'المنتج غير موجود ', statusCode: 404};
+   if(product.stock < quantity) return { data : " المخزون أقل من طلبك" , statusCode : 400};
+
+
+   const otherCartItems = cart.items.filter((p) => p.product !== productId);
+   let total = otherCartItems.reduce((sum , product) =>{
+    sum += product.quantity * product.unitPrice;
+    return sum;
+   },0)
+
+   existsInCart.quantity = quantity;
+   total += existsInCart.quantity * existsInCart.unitPrice;
+   cart.totalAmount = total;
+
+    const updatedCart = await cart.save();
+
+    return {data : updatedCart , statusCode : 200};
+}

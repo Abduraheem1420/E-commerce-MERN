@@ -1,5 +1,5 @@
 import express from "express";
-import { addItemToCart, getCartForActiveUser } from "../servises/cartService";
+import { addItemToCart, getCartForActiveUser, updateItemInCart } from "../servises/cartService";
 import validateJWT, { ExtendUser } from "../middlewares/validateJWT";
 
 const router = express.Router();
@@ -19,6 +19,13 @@ router.post('/items' , validateJWT , async(req : ExtendUser , res) =>{
      const {productId , quantity} = req.body;
      const Response = await addItemToCart({userId , productId , quantity});
      res.status(Response.statusCode).send(Response.data);
+})
+
+router.put('/items' , validateJWT,async( req : ExtendUser , res) =>{
+    const userId = req.user._id;
+    const {productId , quantity} = req.body;
+    const Response = await updateItemInCart({userId , productId , quantity});
+    res.status(Response.statusCode).send(Response.data);
 })
 
 export default router
