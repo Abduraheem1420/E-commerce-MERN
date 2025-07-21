@@ -10,7 +10,6 @@ const createCartForUser = async ({userId} : getCartForUser) =>{
     await cart.save();
     return cart
 }
-
 interface getCartForActiveUser{
     userId : string
 }
@@ -21,6 +20,19 @@ if(!cart) cart = await createCartForUser({userId})
 
     return cart;
 }
+
+interface ClearCart{
+    userId : string;
+}
+export const clearCart = async ({userId} : ClearCart) =>{
+    const cart = await getCartForActiveUser({userId});
+    cart.items = [];
+    cart.totalAmount = 0;
+    const updatedCart = await cart.save();
+    return {data : updatedCart , statusCode : 200};
+}
+
+
 
 interface addItemToCart{
     userId : string
@@ -74,6 +86,29 @@ export const updateItemInCart = async ({userId , productId , quantity} : updateI
    total += existsInCart.quantity * existsInCart.unitPrice;
    cart.totalAmount = total;
 
+    const updatedCart = await cart.save();
+
+    return {data : updatedCart , statusCode : 200};
+}
+
+interface deleteItemInCart{
+    userId : string
+    productId : any
+}
+
+export const deleteItemInCart = async ({userId , productId} : deleteItemInCart) =>{
+ const cart = await getCartForActiveUser({userId});
+  const existsInCart = cart.items.find((p) => p.product.toString() === productId);
+  if(!existsInCart) return { data : "المنتج غير موجود عندك " , statusCode :400};
+
+  const otherCartItems = cart.items.filter((p) => p.product.toString() !== productId);
+   let total = otherCartItems.reduce((sum , product) =>{
+    sum += product.quantity * product.unitPrice;
+    return sum;
+   },0)
+
+   cart.items = otherCartItems;
+   cart.totalAmount = total;
     const updatedCart = await cart.save();
 
     return {data : updatedCart , statusCode : 200};
