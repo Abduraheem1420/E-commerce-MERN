@@ -1,4 +1,5 @@
 import { cartModel } from "../models/cartModel"
+import { IOrderItem, orderModel } from "../models/orderModel";
 import productModel from "../models/productModel";
 
 interface getCartForUser{
@@ -112,4 +113,39 @@ export const deleteItemInCart = async ({userId , productId} : deleteItemInCart) 
     const updatedCart = await cart.save();
 
     return {data : updatedCart , statusCode : 200};
+}
+
+interface CheckOut{
+    userId  : string
+    address : string
+}
+
+export const checkOut = async ({userId ,  address } : CheckOut) =>{
+    if(!address) return {data: " يرجى إدخال العنوان" , statusCode : 400};
+const cart = await getCartForActiveUser({userId});
+const orderItems : IOrderItem[] = [];
+
+for( const item of cart.items ){
+    const product = await productModel.findById(item.product);
+    if(!product) return {data : "المنتج غير موجود" , statusCode: 400};
+
+    const orderItem : IOrderItem = {
+    productTitle  : product.title,
+    productImage  : product.image,
+    unitPrice     : item.unitPrice,
+    quantity      : item.quantity
+    }
+
+    orderItems.push(orderItem);
+}
+    const order = await orderModel.create({
+         orderItems,
+         userId,
+         address,
+         total  : cart.totalAmount
+    })
+    await order.save();
+    cart.status = "completed";
+    await cart.save();
+    return { data : order , statusCode: 200}
 }
