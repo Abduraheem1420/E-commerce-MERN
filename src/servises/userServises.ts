@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 
 
 const generateJWT = (data : any) =>{
- return jwt.sign(data , "hNjABof53eiyOblvITApfQghWYFaZ0kN");
+ return jwt.sign(data , process.env.JWT_SECRET || '');
 }
 
 

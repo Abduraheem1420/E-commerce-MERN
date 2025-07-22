@@ -18,7 +18,7 @@ if(!token){
     return;
 }
 
-jwt.verify(token , "hNjABof53eiyOblvITApfQghWYFaZ0kN" , async (err , payload) =>{
+jwt.verify(token , process.env.JWT_SECRET || '' , async (err , payload) =>{
     if(err){
         res.status(403).send('رمز التحقق فاسد');
         return;

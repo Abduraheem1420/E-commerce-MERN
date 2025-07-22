@@ -5,7 +5,8 @@ export const getAllProducts = async () =>{
 }
 
 export const seedInitialProducts = async () => {
-  const products = [
+  try{
+const products = [
     { title: "Wireless Mouse", image: "https://picsum.photos/id/1080/400/300", price: 25, stock: 50 },
     { title: "Mechanical Keyboard", image: "https://picsum.photos/id/1060/400/300", price: 70, stock: 35 },
     { title: "Gaming Monitor", image: "https://picsum.photos/id/103/400/300", price: 150, stock: 20 },
@@ -19,4 +20,8 @@ export const seedInitialProducts = async () => {
   ];
   const exitingProducts = await getAllProducts();
   if(exitingProducts.length === 0) await productModel.insertMany(products);
+  }catch(err){
+    console.error(" cannot see the DataBase" , err)
+  }
+  
 };
