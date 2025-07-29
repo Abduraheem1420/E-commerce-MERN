@@ -21,7 +21,7 @@ export const register = async ({firstName , lastName , email , password} : regis
     const newUser = new userModel({firstName , lastName , email , password : hashedPassword});
     await newUser.save();
 
-    return {data :generateJWT({firstName , lastName , email}) , statusCode: 200};
+    return {data :  generateJWT({firstName , lastName , email}) , statusCode: 200};
 }
 
 
@@ -34,6 +34,6 @@ export const login = async({password , email} : loginParams) =>{
     const findUser = await userModel.findOne({email : email});
     if(!findUser) return { data : 'كلمة السر أو البريد الإلكتروني غير صحيحين' , statusCode : 400};
     const passwordMatch = await bcrypt.compare(password , findUser.password);
-    if(passwordMatch) return {data : generateJWT({firstName : findUser.firstName , lastName : findUser.lastName , email}) , statusCode : 200};
+    if(passwordMatch) return {data : generateJWT({firstName : findUser.firstName , lastName : findUser.lastName , email}), statusCode : 200};
     return { data : 'كلمة السر أو البريد الإلكتروني غير صحيحين' , statusCode : 400};
 }
