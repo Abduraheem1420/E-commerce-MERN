@@ -12,21 +12,30 @@ import '@fontsource/cairo/300.css';  // Light
 import '@fontsource/cairo/400.css';  // Regular
 import '@fontsource/cairo/500.css';  // Medium
 import '@fontsource/cairo/700.css';
+import AuthProvider from './contex/Auth/AuthProvider.tsx';
 
 
 function App() {
 
   return (
+    <AuthProvider>
+
     <BrowserRouter>
+
     <ThemeProvider theme={theme}>
       <CssBaseline/>
     <Navbar/>
+
     <Routes>
       <Route  path="/" element ={<HomePage/>}/>
       <Route  path="/register" element ={<RegisterPage/>}/>
     </Routes>
+
     </ThemeProvider>
+    
     </BrowserRouter>
+
+    </AuthProvider>
   )
 }
 
