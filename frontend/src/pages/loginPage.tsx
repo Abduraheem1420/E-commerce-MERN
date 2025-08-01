@@ -5,10 +5,8 @@ import { useAuth } from "../contex/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 
-const RegisterPage =  () =>{
+const LoginPage =  () =>{
     const [error , setError] = useState("");
-    const firstNameRef = useRef<HTMLInputElement>(null);
-    const lastNameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -17,20 +15,16 @@ const RegisterPage =  () =>{
     const {login} = useAuth();
 
     const onSubmit = async() =>{
-        const firstName = firstNameRef.current?.value;
-        const lastName = lastNameRef.current?.value;
         const email = emailRef.current?.value;
         const password = passwordRef.current?.value;
 
-        if(!firstName || !lastName || !email || !password) return;
+        if(!email || !password) return;
 
         // make call to api to create the user
-        const Response = await fetch(`${BASE_URL}/user/register` , {
+        const Response = await fetch(`${BASE_URL}/user/login` , {
             method : 'POST',
             headers:{"Content-Type": "application/json"},
             body : JSON.stringify({
-                firstName,
-                lastName,
                 email,
                 password,
             })
@@ -56,7 +50,7 @@ const RegisterPage =  () =>{
             alignItems : 'center',
             mt : 5,
         }}>
-            <Typography variant="h2" fontWeight={700}>إنشاء حساب</Typography>
+            <Typography variant="h2" fontWeight={700}>تسجيل الدخول </Typography>
 
             <Box sx ={{
                  width :'400px',
@@ -67,11 +61,9 @@ const RegisterPage =  () =>{
                 borderRadius : 5 ,
                 border : 3 ,
                  borderColor : '#f5f5f5'}}>
-                <TextField inputRef={firstNameRef} label = ' الإسم ' name="firstName"/>
-                <TextField inputRef={lastNameRef} label = 'النسبة' name="lastName"/>
                 <TextField inputRef={emailRef} label = 'البريد الإلكتروني' name="email"/>
                 <TextField inputRef={passwordRef} type="password" label = 'كلمة السر' name="password"/>
-                <Button onClick={onSubmit} variant="contained">إنشاء حساب</Button>
+                <Button onClick={onSubmit} variant="contained">تسجيل</Button>
                 {error && <Typography sx={{color : 'red' , fontWeight : '700'}}>{error}</Typography>}
             </Box>
         </Box>
@@ -79,4 +71,4 @@ const RegisterPage =  () =>{
     )
 }
 
-export default RegisterPage;
+export default LoginPage;

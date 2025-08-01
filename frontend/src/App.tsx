@@ -13,6 +13,7 @@ import '@fontsource/cairo/400.css';  // Regular
 import '@fontsource/cairo/500.css';  // Medium
 import '@fontsource/cairo/700.css';
 import AuthProvider from './contex/Auth/AuthProvider.tsx';
+import LoginPage from './pages/loginPage.tsx';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
     <Routes>
       <Route  path="/" element ={<HomePage/>}/>
       <Route  path="/register" element ={<RegisterPage/>}/>
+      <Route  path="/login" element ={<LoginPage/>}/>
     </Routes>
 
     </ThemeProvider>
