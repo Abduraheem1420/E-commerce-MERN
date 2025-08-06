@@ -16,34 +16,37 @@ import AuthProvider from './contex/Auth/AuthProvider.tsx';
 import LoginPage from './pages/loginPage.tsx';
 import CartPage from './pages/cartPage.tsx';
 import ProtectedPage from './components/protectedPage.tsx';
+import CartProvider from './contex/cart/cartProvider.tsx';
 
 
 function App() {
 
   return (
     <AuthProvider>
+    <CartProvider>
 
-    <BrowserRouter>
+              <BrowserRouter>
 
-    <ThemeProvider theme={theme}>
-      <CssBaseline/>
-    <Navbar/>
+                    <ThemeProvider theme={theme}>
+                      <CssBaseline/>
+                      
+                                  <Navbar/>
 
-    <Routes>
-      <Route  path="/" element ={<HomePage/>}/>
-      <Route  path="/register" element ={<RegisterPage/>}/>
-      <Route  path="/login" element ={<LoginPage/>}/>
+                                  <Routes>
+                                          <Route  path="/" element ={<HomePage/>}/>
+                                          <Route  path="/register" element ={<RegisterPage/>}/>
+                                          <Route  path="/login" element ={<LoginPage/>}/>
 
-      <Route element = {<ProtectedPage/>}>
-      <Route path="/cart" element ={<CartPage/>}/>   
-      </Route>   
-      
-    </Routes>
+                                          <Route element = {<ProtectedPage/>}>
+                                          <Route path="/cart" element ={<CartPage/>}/>   
+                                          </Route>   
+                                    
+                                  </Routes>
 
-    </ThemeProvider>
-    
-    </BrowserRouter>
-
+                    </ThemeProvider>
+              
+              </BrowserRouter>
+    </CartProvider>
     </AuthProvider>
   )
 }

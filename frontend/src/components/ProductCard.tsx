@@ -5,15 +5,19 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useCart } from '../contex/cart/cartContext';
 
 interface cardProps{
-  id : string;
+  id   : string;
   title : string;
   image : string;
   price : string
 }
 
 export default function ProductCard({id , title , image , price} : cardProps) {
+  const {addItemToCart} = useCart();
+   
+
   return (
     <Card sx={{ direction: 'rtl' , }}>
       <CardMedia
@@ -31,7 +35,7 @@ export default function ProductCard({id , title , image , price} : cardProps) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="contained" size="small">أضف للسلة</Button>
+        <Button variant="contained" size="small" onClick={() => addItemToCart(id)}>أضف للسلة</Button>
       </CardActions>
     </Card>
   );
