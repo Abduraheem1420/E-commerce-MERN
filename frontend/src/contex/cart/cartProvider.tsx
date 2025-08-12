@@ -1,15 +1,54 @@
 import { useState, type FC, type PropsWithChildren } from "react";
 import { CartContext } from "./cartContext";
 import  type {CartItem}  from "../../types/cartItem";
+import { BASE_URL } from "../../components/constans/baseUrl";
+import { useAuth } from "../Auth/AuthContext";
 
 
 
 const CartProvider : FC<PropsWithChildren> = ( {children}) =>{
+    const {token} = useAuth();
     const [cartItems , setCartItems]     = useState<CartItem[]>([]);
     const [totalAmount , setTotalAmount] = useState<number>(0);
 
-    const addItemToCart = ( productID : string) =>{
-        console.log(productID);
+    const [error , setError] = useState('');
+
+    const addItemToCart = async ( productID : string) =>{
+        
+        try{
+             const Response = await fetch(`${BASE_URL}/cart/items`, {
+                        method : 'POST',
+                        headers:{
+                            "Content-Type": "application/json",
+                            "Authorization" : `Bearer ${token}`,
+                        },
+                        body : JSON.stringify({
+                            productID ,
+                             quantity : 1,
+                        })
+                    });
+                    if(!Response.ok){
+                        setError('failed to add to cart');
+                    }
+
+                    const cart = await Response.json();
+                    if(!cart) setError('failed to parse the data');
+
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const cartItemsMapped = cart.items.map(({product , quantity} : {product : any , quantity : any}) =>({
+                        productId : product._id , 
+                        title : product.title,
+                        Image : product.image,
+                        unitPrice : product.unitPrice ,
+                        quantity : quantity
+                    }))
+
+                    setCartItems([...cartItemsMapped]);
+                    setTotalAmount(cart.totalAmount);
+            
+        }catch(error){ 
+            console.error(error)
+        }
     }
 
     return(

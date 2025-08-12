@@ -12,11 +12,18 @@ const createCartForUser = async ({userId} : getCartForUser) =>{
     return cart
 }
 interface getCartForActiveUser{
-    userId : string
+    userId          : string
+    populateProduct?: boolean
 }
 
-export const getCartForActiveUser = async ({userId} : getCartForActiveUser) =>{
-let cart = await cartModel.findOne({userId , status : 'active'});
+export const getCartForActiveUser = async ({userId , populateProduct} : getCartForActiveUser) =>{
+    let cart;
+    if(populateProduct){
+        cart = await cartModel.findOne({userId , status : 'active'}).populate('items.product');
+    }else{
+        cart = await cartModel.findOne({userId , status : 'active'});
+    }
+
 if(!cart) cart = await createCartForUser({userId})
 
     return cart;
@@ -56,9 +63,10 @@ export const addItemToCart = async({userId , productId , quantity} : addItemToCa
     cart.items.push({product : productId , unitPrice: product.price , quantity : quantity})
 
     cart.totalAmount += product.price * quantity;
-    const updatedCart = await cart.save();
 
-    return {data : updatedCart , statusCode : 200};
+     await cart.save();
+
+    return {data : await getCartForActiveUser({userId , populateProduct : true}) , statusCode : 200};
 }
 
 interface updateItemInCart{
@@ -87,9 +95,9 @@ export const updateItemInCart = async ({userId , productId , quantity} : updateI
    total += existsInCart.quantity * existsInCart.unitPrice;
    cart.totalAmount = total;
 
-    const updatedCart = await cart.save();
+     await cart.save();
 
-    return {data : updatedCart , statusCode : 200};
+    return {data : await getCartForActiveUser({userId , populateProduct : true})  , statusCode : 200};
 }
 
 interface deleteItemInCart{
@@ -110,9 +118,9 @@ export const deleteItemInCart = async ({userId , productId} : deleteItemInCart) 
 
    cart.items = otherCartItems;
    cart.totalAmount = total;
-    const updatedCart = await cart.save();
+     await cart.save();
 
-    return {data : updatedCart , statusCode : 200};
+    return {data : await getCartForActiveUser({userId , populateProduct : true})  , statusCode : 200};
 }
 
 interface CheckOut{

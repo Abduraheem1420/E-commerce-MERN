@@ -10,7 +10,7 @@ router.get('/' , validateJWT , async (req : ExtendUser, res) =>{
         return res.status(500).send('Authentication successful but user data not found on request.');
     }
     const userId = req.user._id;
-    const cart = await getCartForActiveUser({userId});
+    const cart = await getCartForActiveUser({userId , populateProduct : true});
     res.status(200).send(cart);
 
 

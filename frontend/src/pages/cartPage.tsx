@@ -1,14 +1,15 @@
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useAuth } from "../contex/Auth/AuthContext";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../components/constans/baseUrl";
+import { useCart } from "../contex/cart/cartContext";
 
 const CartPage = () =>{
     const {token} = useAuth();
-    const [cart , setCart] = useState();
+    const {cartItems , totalAmount} = useCart();
     const [error , setError] = useState('');
 
-    useEffect(() =>{
+    /*useEffect(() =>{
 
         if(!token) return;
 
@@ -21,6 +22,7 @@ const CartPage = () =>{
 
             if(!Response.ok){
                 setError('فشلت في جلب السلة ');
+                return;
             }
 
             const data = await Response.json();
@@ -28,12 +30,15 @@ const CartPage = () =>{
          }
 
         fetchCart()
-    },[token])
-    console.log({cart});
+    },[token])*/
+    
     return(
 
         <Container sx={{mt : '5'}}>
             <Typography variant="h3">السلة</Typography>
+            {cartItems.map((item) =>(
+                <Box>{item.title}</Box>
+            ))}
         </Container>
     )
 }
