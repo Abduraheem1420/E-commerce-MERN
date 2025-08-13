@@ -5,7 +5,7 @@ import { useCart } from "../contex/cart/cartContext";
 
 const CartPage = () =>{
     
-    const {cartItems , totalAmount , updateItemInCart , deleteItemInCart} = useCart();
+    const {cartItems , totalAmount , updateItemInCart , deleteItemInCart , clearCart} = useCart();
 
     const handleQuantity = (productId : string , quantity : number) =>{
         if(quantity <= 0) return;
@@ -16,11 +16,13 @@ const CartPage = () =>{
         deleteItemInCart(productId)
     }
 
-    
-    return(
 
-        <Container fixed sx={{mt : '5'}}>
-            <Typography variant="h3">السلة</Typography>
+
+
+
+
+     const renderCartItems = () =>(
+        <Box>
             {cartItems.map((item) =>(
 
                 <Box sx={{ 
@@ -53,9 +55,30 @@ const CartPage = () =>{
                     
                 </Box>
             ))}
+            
+
             <Box>
                 <Typography variant="h4"> Total Amount  : {totalAmount} LYD </Typography>
             </Box>
+
+            </Box>
+     )
+
+     
+
+
+
+
+    return(
+
+        <Container fixed sx={{mt : '5'}}>
+                            <Box display="flex" flexDirection="row" justifyContent="space-between" margin={3}>
+                            <Typography variant="h3">السلة</Typography>
+                            <Button variant="contained" onClick={() => clearCart()}>فرّغ السلة</Button>
+                            
+                            </Box>
+
+      { cartItems.length ? (renderCartItems()) : (<Typography variant="h4"> السلة فارغة جاهزة لتسوقك</Typography>)}
         </Container>
     )
 }

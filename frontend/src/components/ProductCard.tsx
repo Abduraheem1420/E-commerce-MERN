@@ -31,7 +31,7 @@ export default function ProductCard({id , title , image , price} : cardProps) {
           {title}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          LYD{price}
+          LYD {price}
         </Typography>
       </CardContent>
       <CardActions>
