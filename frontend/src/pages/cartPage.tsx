@@ -5,11 +5,15 @@ import { useCart } from "../contex/cart/cartContext";
 
 const CartPage = () =>{
     
-    const {cartItems , totalAmount , updateItemInCart} = useCart();
+    const {cartItems , totalAmount , updateItemInCart , deleteItemInCart} = useCart();
 
     const handleQuantity = (productId : string , quantity : number) =>{
         if(quantity <= 0) return;
         updateItemInCart( productId , quantity)
+    }
+
+    const handleRemoveItem = ( productId : string ) =>{
+        deleteItemInCart(productId)
     }
 
     
@@ -38,7 +42,7 @@ const CartPage = () =>{
                                 <Box>
                                     <Typography variant="h5">{item.title}</Typography>
                                     <Typography>{item.quantity} X {item.unitPrice} LYD</Typography>
-                                    <Button variant="contained">حذف</Button>
+                                    <Button variant="contained" onClick={() => handleRemoveItem(item.productId)}>حذف</Button>
                                 </Box>
                       </Box>
                                 <ButtonGroup variant="contained" aria-label="Basic button group" sx={{height: '40px' , width:'70px'}}>
