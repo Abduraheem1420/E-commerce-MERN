@@ -5,7 +5,12 @@ import { useCart } from "../contex/cart/cartContext";
 
 const CartPage = () =>{
     
-    const {cartItems , totalAmount} = useCart();
+    const {cartItems , totalAmount , updateItemInCart} = useCart();
+
+    const handleQuantity = (productId : string , quantity : number) =>{
+        if(quantity <= 0) return;
+        updateItemInCart( productId , quantity)
+    }
 
     
     return(
@@ -37,8 +42,8 @@ const CartPage = () =>{
                                 </Box>
                       </Box>
                                 <ButtonGroup variant="contained" aria-label="Basic button group" sx={{height: '40px' , width:'70px'}}>
-                                        <Button>-</Button>
-                                        <Button>+</Button>
+                                        <Button onClick={() => handleQuantity(item.productId , item.quantity - 1)}>-</Button>
+                                        <Button onClick={() => handleQuantity(item.productId , item.quantity + 1)}>+</Button>
                                 </ButtonGroup>
                     
                     
