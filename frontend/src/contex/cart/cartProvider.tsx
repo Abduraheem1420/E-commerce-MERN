@@ -1,4 +1,4 @@
-import { useState, type FC, type PropsWithChildren } from "react";
+import { useEffect, useState, type FC, type PropsWithChildren } from "react";
 import { CartContext } from "./cartContext";
 import  type {CartItem}  from "../../types/cartItem";
 import { BASE_URL } from "../../components/constans/baseUrl";
@@ -12,8 +12,41 @@ const CartProvider : FC<PropsWithChildren> = ( {children}) =>{
     const [totalAmount , setTotalAmount] = useState<number>(0);
 
     const [error , setError] = useState('');
+    
+    useEffect(() =>{
 
-    const addItemToCart = async ( productID : string) =>{
+        if(!token) return;
+
+        const fetchCart = async() =>{
+            const Response = await fetch(`${BASE_URL}/cart` ,{
+                headers : {
+                    'Authorization' : `Bearer ${token}`
+                }
+            });
+
+            if(!Response.ok){
+                setError('فشلت في جلب السلة ');
+                return;
+            }
+
+            const cart = await Response.json();
+            
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             const cartItemsMapped = cart.items.map(({product , quantity , unitPrice} : {product : any , quantity : any , unitPrice : number}) =>({
+                        productId : product._id , 
+                        title : product.title,
+                        Image : product.image,
+                        unitPrice : unitPrice ,
+                        quantity : quantity
+                    }))
+            setCartItems(cartItemsMapped);   
+            setTotalAmount(cart.totalAmount);    
+         }
+
+        fetchCart()
+    },[token])
+
+    const addItemToCart = async ( productId : string) =>{
         
         try{
              const Response = await fetch(`${BASE_URL}/cart/items`, {
@@ -23,7 +56,7 @@ const CartProvider : FC<PropsWithChildren> = ( {children}) =>{
                             "Authorization" : `Bearer ${token}`,
                         },
                         body : JSON.stringify({
-                            productID ,
+                            productId ,
                              quantity : 1,
                         })
                     });
@@ -34,13 +67,14 @@ const CartProvider : FC<PropsWithChildren> = ( {children}) =>{
                     const cart = await Response.json();
                     if(!cart) setError('failed to parse the data');
 
+                  
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const cartItemsMapped = cart.items.map(({product , quantity} : {product : any , quantity : any}) =>({
+                    const cartItemsMapped = cart.items.map(({product , quantity , unitPrice} : {product : any ; quantity : number ; unitPrice : number}) =>({
                         productId : product._id , 
                         title : product.title,
                         Image : product.image,
-                        unitPrice : product.unitPrice ,
-                        quantity : quantity
+                        unitPrice ,
+                        quantity,
                     }))
 
                     setCartItems([...cartItemsMapped]);

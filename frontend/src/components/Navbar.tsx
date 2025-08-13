@@ -14,11 +14,14 @@ import { ShoppingCart } from '@mui/icons-material';
 import { useAuth } from '../contex/Auth/AuthContext';
 import { Badge, Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../contex/cart/cartContext';
 
 
 function Navbar() {
 
   const navigate = useNavigate();
+
+  const {cartItems} = useCart();
 
   const {userName , isAuthenticated , logOut} = useAuth();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -49,11 +52,14 @@ function Navbar() {
 
         
         <Toolbar disableGutters>
+         
             <Box sx={{display:'flex' ,
                  flexDirection : 'row' ,
                   justifyContent :'space-between' , 
                   width : '100%' ,
                   alignItems: 'center'}}>
+
+           <Button variant='text' sx={{color : "#fff"}} onClick={() => navigate("/")}>
             <Box sx={{display : 'flex' , flexDirection : 'row' , alignItems : 'center'}}>
           <AdbIcon sx={{ display: { display : 'flex' }, mr: 1 }} />
           <Typography
@@ -72,11 +78,14 @@ function Navbar() {
           </Typography>
 
          </Box>
+         </Button>
+         
+         
     
           <Box sx={{ flexGrow: 0  , display : 'flex' , flexDirection : 'row'}} gap={4} alignItems={'center'} justifyContent={'space-between'}>
             
                 <IconButton aria-label="cart" onClick={handleCart}>
-                  <Badge badgeContent={4} color="secondary">
+                  <Badge badgeContent={cartItems.length} color="secondary">
                     <ShoppingCart sx={{color : "#ffffff"}}/>
                   </Badge>
                 </IconButton>

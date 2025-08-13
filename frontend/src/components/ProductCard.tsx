@@ -11,7 +11,7 @@ interface cardProps{
   id   : string;
   title : string;
   image : string;
-  price : string
+  price : string;
 }
 
 export default function ProductCard({id , title , image , price} : cardProps) {
