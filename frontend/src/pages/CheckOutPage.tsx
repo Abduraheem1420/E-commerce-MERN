@@ -1,12 +1,44 @@
 import { Box, Container, TextField, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 import { useCart } from "../contex/cart/cartContext";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { BASE_URL } from "../components/constans/baseUrl";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contex/Auth/AuthContext";
 
 const CheckOutPage = () =>{
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [error , setError] = useState('');
     
     const {cartItems , totalAmount} = useCart();
+    const {token} = useAuth();
     const addressRef = useRef<HTMLInputElement>(null);
+
+    const navigate = useNavigate();
+
+    const handleConfirmOrder = async () =>{
+
+        const address = addressRef.current?.value;
+        if(!address) return;
+
+         const Response = await fetch(`${BASE_URL}/cart/checkout` , {
+                    method : 'POST',
+                    headers:{
+                        "Content-Type": "application/json",
+                        "Authorization" : `Bearer ${token}`
+                    },
+                    body : JSON.stringify({
+                        address
+                    })
+                })
+        
+                if(!Response.ok){
+                    setError("خطأ ما حدث");
+                    return;
+                }
+
+                navigate('/order-success');
+    }
 
 
      const renderCartItems = () =>(
@@ -60,7 +92,7 @@ const CheckOutPage = () =>{
                             </Box>
       <TextField inputRef={addressRef} label = "عنوان التوصيل"  name="address" fullWidth/>
       {renderCartItems()}
-      <Button  variant="contained" color="success"  fullWidth>إدفع الآن</Button>
+      <Button  variant="contained" color="success"  fullWidth onClick={handleConfirmOrder}>إدفع الآن</Button>
         </Container>
     )
 }

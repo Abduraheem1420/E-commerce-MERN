@@ -17,7 +17,8 @@ import LoginPage from './pages/loginPage.tsx';
 import CartPage from './pages/cartPage.tsx';
 import ProtectedPage from './components/protectedPage.tsx';
 import CartProvider from './contex/cart/cartProvider.tsx';
-import CheckOutPage from './pages/checkOutPage.tsx';
+import CheckOutPage from './pages/CheckOutPage.tsx';
+import OrderSuccess from './pages/orderSuccess.tsx';
 
 
 function App() {
@@ -40,7 +41,8 @@ function App() {
 
                                           <Route element = {<ProtectedPage/>}>
                                           <Route path="/cart" element ={<CartPage/>}/> 
-                                          <Route path="/checkout" element ={<CheckOutPage/>}/>    
+                                          <Route path="/checkout" element ={<CheckOutPage/>}/>
+                                          <Route path="/order-success" element ={<OrderSuccess/>}/>  
                                           </Route>   
                                     
                                   </Routes>
