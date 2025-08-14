@@ -17,6 +17,7 @@ import LoginPage from './pages/loginPage.tsx';
 import CartPage from './pages/cartPage.tsx';
 import ProtectedPage from './components/protectedPage.tsx';
 import CartProvider from './contex/cart/cartProvider.tsx';
+import CheckOutPage from './pages/checkOutPage.tsx';
 
 
 function App() {
@@ -38,7 +39,8 @@ function App() {
                                           <Route  path="/login" element ={<LoginPage/>}/>
 
                                           <Route element = {<ProtectedPage/>}>
-                                          <Route path="/cart" element ={<CartPage/>}/>   
+                                          <Route path="/cart" element ={<CartPage/>}/> 
+                                          <Route path="/checkout" element ={<CheckOutPage/>}/>    
                                           </Route>   
                                     
                                   </Routes>

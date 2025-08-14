@@ -2,10 +2,13 @@ import { Box, Container, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { useCart } from "../contex/cart/cartContext";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () =>{
     
     const {cartItems , totalAmount , updateItemInCart , deleteItemInCart , clearCart} = useCart();
+
+    const Navigate = useNavigate()
 
     const handleQuantity = (productId : string , quantity : number) =>{
         if(quantity <= 0) return;
@@ -17,7 +20,9 @@ const CartPage = () =>{
     }
 
 
-
+    const handleNavigateCheckOut = () =>{
+        Navigate('/checkout');
+    }
 
 
 
@@ -38,7 +43,7 @@ const CartPage = () =>{
                    padding : 3,
                    }}>
 
-                    <Box display="flex" flexDirection="row" alignItems="center" gap={5}>
+                    <Box display="flex" flexDirection="row" alignItems="center" gap={3}>
                                 <img src={item.Image} width={100}/>
 
                                 <Box>
@@ -57,8 +62,9 @@ const CartPage = () =>{
             ))}
             
 
-            <Box>
-                <Typography variant="h4"> Total Amount  : {totalAmount} LYD </Typography>
+            <Box display="flex" flexDirection="row" justifyContent="space-between">
+                <Typography variant="h4" sx={{fontWeight : "bold"}}> Total Amount  : {totalAmount} LYD </Typography>
+                <Button  variant="contained" color="success" onClick={() => handleNavigateCheckOut()}>الدّفع</Button>
             </Box>
 
             </Box>
@@ -73,6 +79,7 @@ const CartPage = () =>{
 
         <Container fixed sx={{mt : '5'}}>
                             <Box display="flex" flexDirection="row" justifyContent="space-between" margin={3}>
+
                             <Typography variant="h3">السلة</Typography>
                             <Button variant="contained" onClick={() => clearCart()}>فرّغ السلة</Button>
                             
